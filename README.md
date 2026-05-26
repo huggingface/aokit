@@ -1,2 +1,3 @@
-# aotk
-Lightweight utilities around PyTorch AOTI stuff. Used heavily for developing demos with ZeroGPU on HF Spaces.
+# aokit
+
+Lightweight ahead-of-time compilation toolkit for PyTorch. Used heavily in demos with ZeroGPU on HF Spaces.
