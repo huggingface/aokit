@@ -1,0 +1,31 @@
+[project]
+name = "aokit"
+version = "0.1.1"
+description = "Ahead-of-time compilation toolkit"
+readme = "README.md"
+authors = [
+    { name = "sayakpaul", email = "sayak@huggingface.co" },
+    { name = "cbensimon", email = "charles@huggingface.co" },
+]
+requires-python = ">=3.10"
+dependencies = [
+    "huggingface-hub>=0.34.0,<2.0",
+    "torch>=2.8.0,<3.0",
+]
+
+[project.scripts]
+aokit = "aokit:main"
+
+[build-system]
+requires = ["uv_build>=0.10.12,<0.11.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "coverage>=7.14.0",
+    "pyright>=1.1.409",
+    "pytest>=9.0.3",
+]
+test = [
+    "spaces>=0.48.0",
+]
