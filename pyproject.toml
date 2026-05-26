@@ -29,3 +29,7 @@ dev = [
 test = [
     "spaces>=0.48.0",
 ]
+
+[tool.pytest.ini_options]
+addopts = "-v"
+testpaths = ["tests"]
