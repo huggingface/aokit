@@ -26,6 +26,11 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked
 
+      - name: Ruff
+        run: |
+          uvx ruff check
+          uvx ruff format --check
+
       - name: Pyright
         run: |
           uv run pyright
