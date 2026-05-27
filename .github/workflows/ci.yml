@@ -26,7 +26,11 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked
 
-      - name: Test
+      - name: Pyright
+        run: |
+          uv run pyright
+
+      - name: Pytest
         run: |
           uv run coverage run -m pytest
           uv run coverage combine -q

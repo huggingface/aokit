@@ -43,3 +43,10 @@ exclude_also = [
     "^\\s*debug\\(.*\\)\\s*$",
     "^\\s*\\.\\.\\.\\s*$",
 ]
+
+[tool.pyright]
+include = ["src/aokit", "tests"]
+pythonVersion = "3.10"
+reportPossiblyUnboundVariable = "error"
+reportUnnecessaryComparison = true
+reportPrivateImportUsage = false
