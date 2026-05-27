@@ -1,4 +1,5 @@
 """
+/proc FS utils
 """
 
 from contextlib import contextmanager
@@ -19,6 +20,6 @@ def _read_map_files():
     for map_file in Path('/proc/self/map_files').iterdir():
         try:
             path = map_file.readlink()
-        except OSError: # pragma: no cover
+        except OSError:  # pragma: no cover
             continue
         yield map_file.name, path

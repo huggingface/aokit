@@ -1,4 +1,5 @@
 """
+Fork utils
 """
 
 import multiprocessing
@@ -10,7 +11,7 @@ from pathlib import Path
 def maybe_create_queue():
     try:
         ctx = multiprocessing.get_context('fork')
-    except ValueError: # pragma: no cover
+    except ValueError:  # pragma: no cover
         return
     return ctx.Queue()
 
@@ -18,6 +19,6 @@ def maybe_create_queue():
 def remove_after_wait(pid: int, path: Path):
     try:
         os.waitpid(pid, 0)
-    except ChildProcessError: # pragma: no cover
+    except ChildProcessError:  # pragma: no cover
         pass
     shutil.rmtree(path, ignore_errors=True)

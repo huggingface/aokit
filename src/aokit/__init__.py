@@ -1,4 +1,5 @@
 """
+AOKit
 """
 
 import contextlib
@@ -17,7 +18,7 @@ from typing import cast
 from unittest import mock
 
 import torch
-import torch._inductor.codecache # https://github.com/pytorch/pytorch/pull/165157
+import torch._inductor.codecache  # https://github.com/pytorch/pytorch/pull/165157
 from packaging import version
 from torch._functorch._aot_autograd.subclass_parametrization import unwrap_tensor_subclass_parameters
 from torch._inductor.cpu_vec_isa import valid_vec_isa_list
@@ -38,7 +39,7 @@ INDUCTOR_CONFIGS_OVERRIDES: dict[str, Any] = {
     'joint_graph_constant_folding': False,
 }
 
-if version.parse(version.parse(torch.__version__).base_version) >= version.parse('2.10'): # pragma: no cover
+if version.parse(version.parse(torch.__version__).base_version) >= version.parse('2.10'):  # pragma: no cover
     del INDUCTOR_CONFIGS_OVERRIDES['aot_inductor.package_constants_on_disk']
     INDUCTOR_CONFIGS_OVERRIDES['aot_inductor.package_constants_on_disk_format'] = "pickle_weights"
 
@@ -72,13 +73,13 @@ def _compile(
     gm = cast(torch.fx.GraphModule, exported_program.module())
     assert exported_program.example_inputs is not None
     args, kwargs = exported_program.example_inputs
-    artifacts = torch._inductor.aot_compile(gm, args, kwargs, options=inductor_configs) # pyright: ignore [reportArgumentType]
+    artifacts = torch._inductor.aot_compile(gm, args, kwargs, options=inductor_configs)  # pyright: ignore [reportArgumentType]
     artifacts = cast(list[str | Weights], artifacts)
     files = [file for file in artifacts if isinstance(file, str)]
     for file in files:
         if file.endswith('.so'):
             _elf.clear_execstack(Path(file))
-    weights, = (artifact for artifact in artifacts if isinstance(artifact, Weights))
+    (weights,) = (artifact for artifact in artifacts if isinstance(artifact, Weights))
     return files, weights
 
 
@@ -120,7 +121,7 @@ class LazyAOTIModel:
         self._cleanup_queue: multiprocessing.Queue[tuple[int, Path] | None] | None = _fork.maybe_create_queue()
         if self._cleanup_queue is not None:
             Thread(target=self._cleanup_thread_target, name="AOKit-Cleanup", daemon=True).start()
-        valid_vec_isa_list() # pre-warm functools.cache
+        valid_vec_isa_list()  # pre-warm functools.cache
 
     def _cleanup_thread_target(self):
         assert self._cleanup_queue is not None
@@ -152,7 +153,7 @@ class LazyAOTIModel:
             self.loaded_weights.set(weights)
         return compiled_model(*args, **kwargs)
 
-    def __del__(self): # pragma: no cover
+    def __del__(self):  # pragma: no cover
         if self._cleanup_queue is not None:
             self._cleanup_queue.put(None)
 
@@ -179,6 +180,7 @@ def load(
     aokit_loader: Callable[[torch.nn.Module, str], Any] | None = None,
 ):
     from huggingface_hub import snapshot_download
+
     repo_path = snapshot_download(
         repo_id=repo_id,
         revision=revision,
@@ -199,7 +201,7 @@ def load_source_code(
 ):
     loader_name = aokit_loader.__name__ if aokit_loader is not None else 'None'
     loader_source = ""
-    if aokit_loader is not None: # pragma: no cover
+    if aokit_loader is not None:  # pragma: no cover
         loader_source += textwrap.dedent(inspect.getsource(aokit_loader)).strip()
         loader_source += "\n\n"
     load_source = textwrap.dedent(
@@ -253,8 +255,8 @@ def patch(
     aoti_model: LazyAOTIModel,
     call_method: str = 'forward',
 ):
-    module_ = _shallow_clone_module(module) # Prevent original module mutation
-    unwrap_tensor_subclass_parameters(module_) # https://github.com/pytorch/pytorch/issues/159918
+    module_ = _shallow_clone_module(module)  # Prevent original module mutation
+    unwrap_tensor_subclass_parameters(module_)  # https://github.com/pytorch/pytorch/issues/159918
     aoti_model_with_weights = aoti_model.with_weights(module_.state_dict())
     setattr(module, call_method, aoti_model_with_weights)
 

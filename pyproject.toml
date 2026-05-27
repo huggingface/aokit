@@ -50,3 +50,11 @@ pythonVersion = "3.10"
 reportPossiblyUnboundVariable = "error"
 reportUnnecessaryComparison = true
 reportPrivateImportUsage = false
+
+[tool.ruff]
+include = ["src/aokit/*.py", "tests/*.py"]
+line-length = 120
+
+[tool.ruff.format]
+exclude = ["tests/*.py"]
+quote-style = "preserve"

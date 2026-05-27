@@ -1,4 +1,5 @@
 """
+Linux ELF utils
 """
 
 from pathlib import Path
@@ -19,7 +20,7 @@ OFFSET_PROGRAM_HEADER_FLAGS = 4
 def clear_execstack(path: Path) -> bool:
     with path.open('r+b') as file:
         buffer = mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_WRITE)
-        assert buffer[:len(ELF_HEADER)] == ELF_HEADER
+        assert buffer[: len(ELF_HEADER)] == ELF_HEADER
         ph_offset: int = struct.unpack_from('Q', buffer=buffer, offset=OFFSET_PROGRAM_HEADER_OFFSET)[0]
         ph_esize: int = struct.unpack_from('H', buffer=buffer, offset=OFFSET_PROGRAM_HEADER_ESIZE)[0]
         ph_count: int = struct.unpack_from('H', buffer=buffer, offset=OFFSET_PROGRAM_HEADER_COUNT)[0]
@@ -33,5 +34,5 @@ def clear_execstack(path: Path) -> bool:
                 write_value = flags_value & ~PF_X
                 struct.pack_into('I', buffer, write_offset, write_value)
                 return True
-            return False # pragma: no cover
-        return False # pragma: no cover
+            return False  # pragma: no cover
+        return False  # pragma: no cover
