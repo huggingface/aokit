@@ -5,9 +5,7 @@ import multiprocessing
 import os
 import signal
 import time
-from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
-from typing import Any
 
 import pytest
 import torch

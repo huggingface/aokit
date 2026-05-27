@@ -65,7 +65,7 @@ def test_load_from_hub(use_loader: bool):
 
 def test_load_source_code():
     assert aokit.load_source_code('model', repo_id='repo/id') == textwrap.dedent(
-        f"""\
+        """\
             aokit.load(
                 module=model,
                 repo_id='repo/id',

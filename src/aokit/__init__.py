@@ -212,7 +212,7 @@ def load_source_code(
             )
         """
     )
-    load_source = '\n'.join(line for line in load_source.splitlines() if not "=None," in line)
+    load_source = '\n'.join(line for line in load_source.splitlines() if "=None," not in line)
     return loader_source + load_source
 
 
@@ -224,7 +224,6 @@ def load_from_package_dir(
     package_dir = Path(package_dir)
     submodules_dir = package_dir / 'submodules'
     rootmodule_dir = package_dir / 'root'
-    kernels_dir = package_dir / 'kernels'
     # Submodules
     if submodules_dir.is_dir():
         for subpackage_dir in submodules_dir.iterdir():
