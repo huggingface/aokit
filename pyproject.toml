@@ -30,3 +30,16 @@ dev = [
 [tool.pytest.ini_options]
 addopts = "-v"
 testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["aokit"]
+concurrency = ["thread", "multiprocessing"]
+
+[tool.coverage.report]
+fail_under = 100
+exclude_also = [
+    "^\\s*if TYPE_CHECKING:\\s*$",
+    "^\\s*assert_never\\(.*\\)\\s*$",
+    "^\\s*debug\\(.*\\)\\s*$",
+    "^\\s*\\.\\.\\.\\s*$",
+]

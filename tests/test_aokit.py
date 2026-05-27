@@ -8,23 +8,7 @@ import torch
 import aokit
 
 
-MLP_REPO_ID = 'aokit-tests/mlp-{device}'
-
-
-class MLP(torch.nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.fc1 = torch.nn.Linear(10, 16)
-        self.relu = torch.nn.ReLU()
-        self.fc2 = torch.nn.Linear(16, 1)
-        self.sigmoid = torch.nn.Sigmoid()
-
-    def forward(self, x):
-        x = self.fc1(x)
-        x = self.relu(x)
-        x = self.fc2(x)
-        x = self.sigmoid(x)
-        return x
+MODEL_REPO_ID = 'aokit-tests/Model-cpu'
 
 
 class Block(torch.nn.Module):
@@ -38,27 +22,31 @@ class Block(torch.nn.Module):
         x = self.fc1(x)
         x = self.relu(x)
         x = self.fc2(x)
+        x = self.relu(x)
         return x
 
 
-class Blocks(torch.nn.Module):
+class Model(torch.nn.Module):
     def __init__(self):
         super().__init__()
         self.blocks = torch.nn.ModuleList([
             Block(),
             Block(),
         ])
+        self.fc = torch.nn.Linear(10, 1)
+        self.sigmoid = torch.nn.Sigmoid()
 
     def forward(self, x):
         for block in self.blocks:
             x = block(x)
+        x = self.fc(x)
+        x = self.sigmoid(x)
         return x
 
 
 def test_compile_and_load(tmp_path: Path):
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    model = MLP().to(device)
-    inp = torch.randn(8, 10, device=device)
+    model = Model()
+    inp = torch.randn(8, 10)
     out = model(inp)
 
     with aokit.capture(model) as call:
@@ -73,9 +61,8 @@ def test_compile_and_load(tmp_path: Path):
 
 
 def test_compile_and_load_repeated(tmp_path: Path):
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    model = Blocks().to(device)
-    inp = torch.randn(8, 10, device=device)
+    model = Model()
+    inp = torch.randn(8, 10)
     out = model(inp)
 
     with aokit.capture(model.blocks[0]) as call:
@@ -90,12 +77,11 @@ def test_compile_and_load_repeated(tmp_path: Path):
 
 
 def test_load_from_hub():
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    model = MLP().to(device)
-    inp = torch.randn(8, 10, device=device)
+    model = Model()
+    inp = torch.randn(8, 10)
     out = model(inp)
 
-    aokit.load(model, repo_id=MLP_REPO_ID.format(device=device))
+    aokit.load(model, repo_id=MODEL_REPO_ID)
 
     out_ = model(inp)
     assert torch.allclose(out, out_)
