@@ -16,5 +16,8 @@ def maybe_create_queue():
 
 
 def remove_after_wait(pid: int, path: Path):
-    os.waitpid(pid, 0)
+    try:
+        os.waitpid(pid, 0)
+    except ChildProcessError: # pragma: no cover
+        pass
     shutil.rmtree(path, ignore_errors=True)

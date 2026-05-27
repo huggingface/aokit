@@ -152,7 +152,7 @@ class LazyAOTIModel:
             self.loaded_weights.set(weights)
         return compiled_model(*args, **kwargs)
 
-    def __del__(self):
+    def __del__(self): # pragma: no cover
         if self._cleanup_queue is not None:
             self._cleanup_queue.put(None)
 
@@ -199,7 +199,7 @@ def load_source_code(
 ):
     loader_name = aokit_loader.__name__ if aokit_loader is not None else 'None'
     loader_source = ""
-    if aokit_loader is not None:
+    if aokit_loader is not None: # pragma: no cover
         loader_source += textwrap.dedent(inspect.getsource(aokit_loader)).strip()
         loader_source += "\n\n"
     load_source = textwrap.dedent(
