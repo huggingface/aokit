@@ -16,7 +16,7 @@ OFFSET_PROGRAM_HEADER_COUNT = 56
 OFFSET_PROGRAM_HEADER_FLAGS = 4
 
 
-def clear_elf_execstack(path: Path) -> bool:
+def clear_execstack(path: Path) -> bool:
     with path.open('r+b') as file:
         buffer = mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_WRITE)
         assert buffer[:len(ELF_HEADER)] == ELF_HEADER
