@@ -3,6 +3,7 @@ AOKit
 """
 
 import contextlib
+import importlib.metadata
 import inspect
 import multiprocessing
 import os
@@ -268,3 +269,9 @@ def _shallow_clone_module(module: torch.nn.Module) -> torch.nn.Module:
     clone._buffers = module._buffers.copy()
     clone._modules = {k: _shallow_clone_module(v) for k, v in module._modules.items() if v is not None}
     return clone
+
+
+try:
+    __version__ = importlib.metadata.version('aokit')
+except importlib.metadata.PackageNotFoundError:  # pragma: no cover
+    __version__ = '0+unknown'
