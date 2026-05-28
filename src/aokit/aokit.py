@@ -25,9 +25,9 @@ from torch._inductor.package.package import package_aoti
 from torch.export.pt2_archive._package import AOTICompiledModel
 from torch.export.pt2_archive._package_weights import Weights
 
-from . import elf
-from . import fork
-from . import proc
+from ._internal import elf
+from ._internal import fork
+from ._internal import proc
 
 
 INDUCTOR_CONFIGS_OVERRIDES: dict[str, Any] = {
