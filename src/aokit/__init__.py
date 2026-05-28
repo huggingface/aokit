@@ -4,7 +4,7 @@ AOKit
 
 import importlib.metadata
 
-from .aokit import capture
+from . import exporting
 from .aokit import compile_and_save
 from .aokit import load
 from .aokit import load_from_package_dir
@@ -16,7 +16,7 @@ from .aokit import LazyAOTIModelWithWeights
 
 
 __all__ = [
-    'capture',
+    'exporting',
     'compile_and_save',
     'load',
     'load_from_package_dir',
