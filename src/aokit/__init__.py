@@ -5,6 +5,8 @@ AOKit
 import importlib.metadata
 
 from . import exporting
+from .aokit import AOKIT_PACKAGE_NAME
+from .aokit import AOKIT_PACKAGE_ROOT
 from .aokit import compile_and_save
 from .aokit import load
 from .aokit import load_from_package_dir
@@ -16,6 +18,8 @@ from .aokit import LazyAOTIModelWithWeights
 
 
 __all__ = [
+    'AOKIT_PACKAGE_NAME',
+    'AOKIT_PACKAGE_ROOT',
     'exporting',
     'compile_and_save',
     'load',

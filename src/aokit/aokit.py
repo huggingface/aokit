@@ -42,8 +42,8 @@ EXTERNAL_WEIGHTS_AOTI_CONFIGS: dict[str, Any] = {
 }
 
 
-PACKAGE_DIRNAME = 'package'
-PACKAGE_FILENAME = 'package.pt2'
+AOKIT_PACKAGE_ROOT = 'package'
+AOKIT_PACKAGE_NAME = 'package.pt2'
 
 
 def compile_and_save(
@@ -60,7 +60,7 @@ def compile_and_save(
     else:
         subdir_path = Path(package_dir) / 'root'
     subdir_path.mkdir(parents=True, exist_ok=True)
-    package_path = subdir_path / PACKAGE_FILENAME
+    package_path = subdir_path / AOKIT_PACKAGE_NAME
     package_path.write_bytes(archive_file.getbuffer())
 
 
@@ -155,9 +155,9 @@ def load(
     repo_path = snapshot_download(
         repo_id=repo_id,
         revision=revision,
-        allow_patterns=f'{PACKAGE_DIRNAME}/*',
+        allow_patterns=f'{AOKIT_PACKAGE_ROOT}/*',
     )
-    package_dir = Path(repo_path) / PACKAGE_DIRNAME
+    package_dir = Path(repo_path) / AOKIT_PACKAGE_ROOT
     if aokit_loader is not None:
         aokit_loader(module, str(package_dir))
     else:
@@ -213,7 +213,7 @@ def load_from_module_dir(
     module_dir: str | os.PathLike[str],
 ):
     module_dir = Path(module_dir)
-    aoti_model = LazyAOTIModel(module_dir / PACKAGE_FILENAME)
+    aoti_model = LazyAOTIModel(module_dir / AOKIT_PACKAGE_NAME)
     if isinstance(module, Iterable):
         for block in module:
             patch(block, aoti_model)
