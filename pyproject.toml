@@ -4,8 +4,8 @@ version = "0.1.1"
 description = "Ahead-of-time compilation toolkit"
 readme = "README.md"
 authors = [
-    { name = "sayakpaul", email = "sayak@huggingface.co" },
     { name = "cbensimon", email = "charles@huggingface.co" },
+    { name = "sayakpaul", email = "sayak@huggingface.co" },
 ]
 requires-python = ">=3.10"
 dependencies = [
