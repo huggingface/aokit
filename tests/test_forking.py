@@ -20,7 +20,7 @@ def test_fork_cleanup(tmp_path: Path, sigkill: bool):
     model = Model()
     inp = torch.randn(8, 10)
 
-    with aokit.capture(model) as call:
+    with aokit.exporting.capture(model) as call:
         model(inp)
     exported = torch.export.export(model, call.args, call.kwargs)
     package_dir = tmp_path / 'package'

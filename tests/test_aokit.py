@@ -18,7 +18,7 @@ def test_compile_and_load(tmp_path: Path):
     inp = torch.randn(8, 10)
     out = model(inp)
 
-    with aokit.capture(model) as call:
+    with aokit.exporting.capture(model) as call:
         model(inp)
     exported = torch.export.export(model, call.args, call.kwargs)
     package_dir = tmp_path / 'package'
@@ -34,7 +34,7 @@ def test_compile_and_load_repeated(tmp_path: Path):
     inp = torch.randn(8, 10)
     out = model(inp)
 
-    with aokit.capture(model.blocks[0]) as call:
+    with aokit.exporting.capture(model.blocks[0]) as call:
         model(inp)
     exported = torch.export.export(model.blocks[0], call.args, call.kwargs)
     package_dir = tmp_path / 'package'
