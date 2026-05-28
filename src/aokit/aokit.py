@@ -30,17 +30,17 @@ from ._internal import fork
 from ._internal import proc
 
 
-INDUCTOR_CONFIGS_OVERRIDES: dict[str, Any] = {
+EXTERNAL_WEIGHTS_AOTI_CONFIGS: dict[str, Any] = {
     'aot_inductor.package_constants_in_so': False,
-    'aot_inductor.package_constants_on_disk': True,
-    'aot_inductor.package': True,
     'always_keep_tensor_constants': True,
     'joint_graph_constant_folding': False,
+    **(
+        {'aot_inductor.package_constants_on_disk_format': "pickle_weights"}
+        if version.parse(version.parse(torch.__version__).base_version) >= version.parse('2.10')
+        else {'aot_inductor.package_constants_on_disk': True}
+    ),
 }
 
-if version.parse(version.parse(torch.__version__).base_version) >= version.parse('2.10'):  # pragma: no cover
-    del INDUCTOR_CONFIGS_OVERRIDES['aot_inductor.package_constants_on_disk']
-    INDUCTOR_CONFIGS_OVERRIDES['aot_inductor.package_constants_on_disk_format'] = "pickle_weights"
 
 PACKAGE_DIRNAME = 'package'
 PACKAGE_FILENAME = 'package.pt2'
@@ -68,11 +68,12 @@ def _compile(
     exported_program: torch.export.ExportedProgram,
     inductor_configs: dict[str, Any] | None = None,
 ):
-    inductor_configs = {**(inductor_configs or {}), **INDUCTOR_CONFIGS_OVERRIDES}
     gm = cast(torch.fx.GraphModule, exported_program.module())
     assert exported_program.example_inputs is not None
     args, kwargs = exported_program.example_inputs
-    artifacts = torch._inductor.aot_compile(gm, args, kwargs, options=inductor_configs)  # pyright: ignore [reportArgumentType]
+    inductor_configs = {**(inductor_configs or {}), **EXTERNAL_WEIGHTS_AOTI_CONFIGS}
+    aot_compile_options = {**inductor_configs, 'aot_inductor.package': True}
+    artifacts = torch._inductor.aot_compile(gm, args, kwargs, options=aot_compile_options)
     artifacts = cast(list[str | Weights], artifacts)
     files = [file for file in artifacts if isinstance(file, str)]
     for file in files:
