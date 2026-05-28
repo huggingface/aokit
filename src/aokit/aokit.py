@@ -7,7 +7,6 @@ import inspect
 import multiprocessing
 import os
 import textwrap
-from collections.abc import Iterable
 from contextvars import ContextVar
 from io import BytesIO
 from pathlib import Path
@@ -214,7 +213,7 @@ def load_from_module_dir(
 ):
     module_dir = Path(module_dir)
     aoti_model = LazyAOTIModel(module_dir / AOKIT_PACKAGE_NAME)
-    if isinstance(module, Iterable):
+    if isinstance(module, torch.nn.ModuleList):
         for block in module:
             patch(block, aoti_model)
     else:
