@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.pyc
+
+# Coverage.py
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
