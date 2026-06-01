@@ -23,4 +23,4 @@ Coming soon
 
 ## API documentation
 
-Coming soon
+Refer to [`src/aokit/aokit.py`](./src/aokit/aokit.py).
