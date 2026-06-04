@@ -1,0 +1,58 @@
+AOKit
+35.8 (+140ms for aokit.load?)
+35.5
+
+Eager
+48.1
+47.7
+
+Compile full
+277s
+35.2s
+
+Compile full cached
+55.4s
+35.2s
+
+Compile regional
+141s
+34.7s
+
+Compile regional cached
+36.5s
+34.9s
+
+Compile regional cached width 640
+198s
+37.1s
+
+AOKit width 640
+37.4s
+37.2s
+
+First video:
+- AOKit: 35.6s (including `aokit.load`)
+- Eager: 45.6s
+- torch.compile (regional): 141s
+- torch.compile (full model): 277s
+
+Second video:
+- AOKit: 35.1s
+- Eager: 47.7s
+- torch.compile regional: 34.9s
+- torch.compile full model: 35.2s
+
+Third video with width change:
+- AOKit: 37.2s
+- Eager: 49.8s
+- torch.compile regional: 198s
+- torch.compile 356s
+
+Time per inference step:
+- Eager (baseline): 5.4s
+- AOKit: 3.9s (1.40x)
+- torch.compile regional: 3.8s (1.42x)
+- torch.compile full: 3.9s (1.42x)
+
+Ensuite un mot / benchmark sur changement d'input (dim par exemple)
+"even with torch.compile in regional mode with inductor cache pre-filled on base input, changing desired video width from 624px to 640px adds 3mins of overhead"
