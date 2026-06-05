@@ -1,0 +1,21 @@
+<svg width="860" height="104" viewBox="0 0 860 104" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">First video benchmark</title>
+  <desc id="desc">Horizontal bar chart for first video generation time. AOKit takes 53.5 seconds, eager takes 81.2 seconds, and torch.compile takes 366.0 seconds.</desc>
+  <style>
+    .label { font: 600 15px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #334155; }
+    .value { font: 700 15px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
+    @media (prefers-color-scheme: dark) {
+      .label { fill: #cbd5e1; }
+      .value { fill: #f8fafc; }
+    }
+  </style>
+  <text x="0" y="17" class="label">AOKit</text>
+  <rect x="142" y="2" width="88" height="22" rx="4" fill="#f97316"/>
+  <text x="805" y="18" class="value">53.5s</text>
+  <text x="0" y="49" class="label">Eager</text>
+  <rect x="142" y="34" width="133" height="22" rx="4" fill="#94a3b8"/>
+  <text x="805" y="50" class="value">81.2s</text>
+  <text x="0" y="81" class="label">torch.compile</text>
+  <rect x="142" y="66" width="620" height="22" rx="4" fill="#2563eb"/>
+  <text x="805" y="82" class="value">366.0s</text>
+</svg>

@@ -31,44 +31,26 @@ Bars are scaled independently for each step.
 AOKit reaches the first generated video faster, while `torch.compile` pays its
 initial compilation cost.
 
-| Mode | Time | Relative bar |
-| --- | ---: | --- |
-| **AOKit** | **53.5s** | `######` |
-| Eager | 81.2s | `#########` |
-| `torch.compile` | 366.0s | `########################################` |
+![First video benchmark results](./benchmark/first-video.svg)
 
 ### Second video: same shape (`width=624`)
 
 Once the shape is already known, AOKit and `torch.compile` are both much faster
 than eager execution.
 
-| Mode | Time | Relative bar |
-| --- | ---: | --- |
-| **AOKit** | **54.0s** | `###########################` |
-| Eager | 80.0s | `########################################` |
-| `torch.compile` | 54.9s | `###########################` |
+![Same-shape benchmark results](./benchmark/same-shape.svg)
 
 ### Third video: new shape (`width=640`)
 
 AOKit keeps using the same dynamic compiled artifact. `torch.compile` has to
 compile again for the new shape.
 
-| Mode | Time | Relative bar |
-| --- | ---: | --- |
-| **AOKit** | **56.2s** | `####` |
-| Eager | 83.0s | `######` |
-| `torch.compile` | 546.3s | `########################################` |
+![New-shape benchmark results](./benchmark/new-shape.svg)
 
-### Fourth video: another new shape (`width=656`)
-
-By this point, `torch.compile` has generalized enough to avoid another large
-compile spike, but the benchmark already paid for two expensive compilations.
-
-| Mode | Time | Relative bar |
-| --- | ---: | --- |
-| **AOKit** | **58.6s** | `###########################` |
-| Eager | 86.2s | `########################################` |
-| `torch.compile` | 59.7s | `############################` |
+After the third video, `torch.compile` has generalized enough to avoid more
+shape-triggered recompilations and runs as fast as AOKit on new inputs. The cost
+is paid upfront: one initial compilation, then another compilation when the
+first new dynamic shape appears.
 
 Raw results are available in [`benchmark/results-aokit.txt`](./benchmark/results-aokit.txt),
 [`benchmark/results-eager.txt`](./benchmark/results-eager.txt), and
