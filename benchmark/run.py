@@ -120,8 +120,8 @@ def run_benchmark_eager():
 
 def run_benchmark_compile():
     pipeline = load_pipeline()
-    pipeline.transformer.compile()
-    pipeline.transformer_2.compile()
+    pipeline.transformer.compile_repeated_blocks()
+    pipeline.transformer_2.compile_repeated_blocks()
     run_benchmark(pipeline, 'compile')
 
 
