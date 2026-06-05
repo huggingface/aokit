@@ -1,6 +1,6 @@
 <svg width="860" height="104" viewBox="0 0 860 104" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
   <title id="title">New shape benchmark</title>
-  <desc id="desc">Horizontal bar chart for third video generation time with a new shape. AOKit takes 56.2 seconds, eager takes 83.0 seconds, and torch.compile takes 546.3 seconds.</desc>
+  <desc id="desc">Horizontal bar chart for third video generation time with a new shape. AOKit takes 56.2 seconds, eager takes 83.0 seconds, and torch.compile takes 297.8 seconds.</desc>
   <style>
     .label { font: 600 15px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #334155; }
     .value { font: 700 15px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
@@ -10,12 +10,12 @@
     }
   </style>
   <text x="0" y="17" class="label">AOKit</text>
-  <rect x="142" y="2" width="64" height="22" rx="4" fill="#f97316"/>
+  <rect x="142" y="2" width="117" height="22" rx="4" fill="#f97316"/>
   <text x="805" y="18" class="value">56.2s</text>
   <text x="0" y="49" class="label">Eager</text>
-  <rect x="142" y="34" width="94" height="22" rx="4" fill="#94a3b8"/>
+  <rect x="142" y="34" width="173" height="22" rx="4" fill="#94a3b8"/>
   <text x="805" y="50" class="value">83.0s</text>
   <text x="0" y="81" class="label">torch.compile</text>
   <rect x="142" y="66" width="620" height="22" rx="4" fill="#2563eb"/>
-  <text x="805" y="82" class="value">546.3s</text>
+  <text x="805" y="82" class="value">297.8s</text>
 </svg>
