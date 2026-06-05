@@ -11,13 +11,45 @@ Extending PyTorch [AOTInductor](https://docs.pytorch.org/docs/stable/user_guide/
 - **[ZeroGPU](https://huggingface.co/docs/hub/spaces-zerogpu) compatibility**: leverages lazy execution for seamless integration
 - **[`kernels`](https://github.com/huggingface/kernels) integration**: automatically packages and loads required kernels (coming soon)
 
-## Installation
+## Benefits in practice
+
+**AOKit** is designed for workloads where compilation latency matters as much as steady-state performance.
+
+The benchmark below compares **AOKit**, **eager mode**, and **`torch.compile`** across several consecutive video generations.
+
+Setup details:
+- Model: [`Wan-AI/Wan2.2-I2V-A14B-Diffusers`](https://huggingface.co/Wan-AI/Wan2.2-I2V-A14B-Diffusers)
+- Hardware: AWS g7e.12xlarge (RTX Pro 6000 Blackwell)
+
+### First run
+
+High overhead for `torch.compile`
+
+![First video benchmark results](./benchmark/first-video.svg)
+
+### Second run
+
+`torch.compile` is now warmed-up and on par with `AOKit` while eager mode is slower
+
+![Same-shape benchmark results](./benchmark/same-shape.svg)
+
+### Third run
+
+Here we are changing the width of the video, which triggers a re-compile for `torch.compile`
+
+![New-shape benchmark results](./benchmark/new-shape.svg)
+
+After the third video, `torch.compile` has now switched to dynamic mode and runs as fast as AOKit on new inputs.
+
+You can checkout the benchmark script for more details: [`benchmark/run.py`](./benchmark/run.py)
+
+## Quickstart
+
+### Installation
 
 ``` bash
 pip install aokit
 ```
-
-## Quickstart
 
 We recommend following the [accompanying blog post](https://huggingface.co/blog/zerogpu-aoti).
 
