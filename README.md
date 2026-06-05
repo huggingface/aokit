@@ -17,6 +17,63 @@ Extending PyTorch [AOTInductor](https://docs.pytorch.org/docs/stable/user_guide/
 pip install aokit
 ```
 
+## Benchmarks
+
+Lower is better. This benchmark runs
+[`Wan-AI/Wan2.2-I2V-A14B-Diffusers`](https://huggingface.co/Wan-AI/Wan2.2-I2V-A14B-Diffusers)
+on `g7e.12x-cu132`, generating 81 frames with 8 inference steps and changing the
+video width across runs.
+
+Bars are scaled independently for each step.
+
+### First video: time to first video (`width=624`)
+
+AOKit reaches the first generated video faster, while `torch.compile` pays its
+initial compilation cost.
+
+| Mode | Time | Relative bar |
+| --- | ---: | --- |
+| **AOKit** | **53.5s** | `######` |
+| Eager | 81.2s | `#########` |
+| `torch.compile` | 366.0s | `########################################` |
+
+### Second video: same shape (`width=624`)
+
+Once the shape is already known, AOKit and `torch.compile` are both much faster
+than eager execution.
+
+| Mode | Time | Relative bar |
+| --- | ---: | --- |
+| **AOKit** | **54.0s** | `###########################` |
+| Eager | 80.0s | `########################################` |
+| `torch.compile` | 54.9s | `###########################` |
+
+### Third video: new shape (`width=640`)
+
+AOKit keeps using the same dynamic compiled artifact. `torch.compile` has to
+compile again for the new shape.
+
+| Mode | Time | Relative bar |
+| --- | ---: | --- |
+| **AOKit** | **56.2s** | `####` |
+| Eager | 83.0s | `######` |
+| `torch.compile` | 546.3s | `########################################` |
+
+### Fourth video: another new shape (`width=656`)
+
+By this point, `torch.compile` has generalized enough to avoid another large
+compile spike, but the benchmark already paid for two expensive compilations.
+
+| Mode | Time | Relative bar |
+| --- | ---: | --- |
+| **AOKit** | **58.6s** | `###########################` |
+| Eager | 86.2s | `########################################` |
+| `torch.compile` | 59.7s | `############################` |
+
+Raw results are available in [`benchmark/results-aokit.txt`](./benchmark/results-aokit.txt),
+[`benchmark/results-eager.txt`](./benchmark/results-eager.txt), and
+[`benchmark/results-compile.txt`](./benchmark/results-compile.txt).
+
 ## Quickstart
 
 We recommend following the [accompanying blog post](https://huggingface.co/blog/zerogpu-aoti).
