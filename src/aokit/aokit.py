@@ -7,6 +7,7 @@ import inspect
 import multiprocessing
 import os
 import textwrap
+import warnings
 from contextvars import ContextVar
 from io import BytesIO
 from pathlib import Path
@@ -155,7 +156,20 @@ class LazyAOTIModel:
         if (loaded_weights := self.loaded_weights.get()) is None or loaded_weights is not weights:
             constant_fqns = compiled_model.get_constant_fqns()
             constant_map = {name: tensor for name, tensor in weights.items() if name in constant_fqns}
-            # TODO: Explicit warn on missing / unexpected fqns
+            missing_fqns = set(constant_fqns) - weights.keys()
+            unexpected_fqns = weights.keys() - set(constant_fqns)
+            if missing_fqns:
+                warnings.warn(
+                    f"The following constant FQNs are expected by the compiled model but missing from weights: {sorted(missing_fqns)}",
+                    UserWarning,
+                    stacklevel=2,
+                )
+            if unexpected_fqns:
+                warnings.warn(
+                    f"The following weight keys are not expected by the compiled model: {sorted(unexpected_fqns)}",
+                    UserWarning,
+                    stacklevel=2,
+                )
             compiled_model.load_constants(constant_map, check_full_update=check_full_update, user_managed=True)
             self.loaded_weights.set(weights)
         return compiled_model(*args, **kwargs)

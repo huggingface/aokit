@@ -72,3 +72,42 @@ def test_load_source_code():
             )
         """
     ).rstrip()
+
+
+def test_missing_fqn_warning(tmp_path: Path):
+    model = Model()
+    inp = torch.randn(8, 10)
+
+    with aokit.exporting.capture(model) as call:
+        model(inp)
+    exported = torch.export.export(model, call.args, call.kwargs)
+    package_dir = tmp_path / 'package'
+    aokit.compile_and_save(package_dir, exported)
+    aokit.load_from_package_dir(model, package_dir)
+
+    aoti_model = model.forward.model
+    weights = model.forward.weights
+    missing_key = next(iter(weights))
+    incomplete_weights = {k: v for k, v in weights.items() if k != missing_key}
+
+    with pytest.warns(UserWarning, match='missing from weights'):
+        aoti_model(incomplete_weights, False, inp)
+
+
+def test_unexpected_fqn_warning(tmp_path: Path):
+    model = Model()
+    inp = torch.randn(8, 10)
+
+    with aokit.exporting.capture(model) as call:
+        model(inp)
+    exported = torch.export.export(model, call.args, call.kwargs)
+    package_dir = tmp_path / 'package'
+    aokit.compile_and_save(package_dir, exported)
+    aokit.load_from_package_dir(model, package_dir)
+
+    aoti_model = model.forward.model
+    weights = model.forward.weights
+    extra_weights = {**weights, '__unexpected__.extra': torch.zeros(1)}
+
+    with pytest.warns(UserWarning, match='not expected by the compiled model'):
+        aoti_model(extra_weights, False, inp)
