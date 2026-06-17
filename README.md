@@ -131,13 +131,12 @@ image.save("generated_image.png")
 
 </details>
 
-## Dynamic shapes
+You can find several other guides at [`guides`](./guides/):
 
-## Regional compilation
-
-## Compilation flags
-
-## Kernels support
+* [Dynamic shapes](./guides/dynamic_shapes.md)
+* Regional compilation (coming)
+* Compilation flags (coming)
+* Kernels support (coming)
 
 ## API documentation
 
