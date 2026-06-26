@@ -27,8 +27,7 @@ are [two repeated blocks](https://github.com/huggingface/diffusers/blob/9a72cd3e
 * `transformer_blocks`
 * `single_transformer_blocks`
 
-Instead of compiling the full `pipe.transformer`, we now
-have to compile a _single_ module within the block, like so:
+Instead of compiling the full `pipe.transformer`, we compile one block from each group, like so:
 
 ```py
 with aokit.exporting.capture(pipe.transformer.transformer_blocks[0]) as call_block_one:
@@ -50,7 +49,11 @@ with torch.no_grad():
     )
 
 package_dir = "flux_exported"
-aokit.compile_and_save(package_dir=package_dir, exported_program=exported_block_one, submodule="transformer_blocks")
+aokit.compile_and_save(
+    package_dir=package_dir,
+    exported_program=exported_block_one,
+    submodule="transformer_blocks",
+)
 aokit.compile_and_save(
     package_dir=package_dir, 
     exported_program=exported_block_two, 
