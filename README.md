@@ -134,7 +134,7 @@ image.save("generated_image.png")
 You can find several other guides at [`guides`](./guides/):
 
 * [Dynamic shapes](./guides/dynamic_shapes.md)
-* Regional compilation (coming)
+* [Regional compilation](./guides/regional_compilation.md)
 * Compilation flags (coming)
 * Kernels support (coming)
 
