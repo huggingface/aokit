@@ -22,7 +22,15 @@
 # Run it on HF Jobs (defaults to the `rtx-pro-6000` flavor):
 #
 #     hf auth login
-#     hf jobs uv run job.py --flavor rtx-pro-6000 --secrets HF_TOKEN
+#     hf jobs uv run job.py \
+#         --flavor rtx-pro-6000 \
+#         --image pytorch/pytorch:2.9.1-cuda13.0-cudnn9-devel \
+#         --secrets HF_TOKEN
+#
+# The `--image` is required: AOTInductor compiles a `.so`, which needs a full
+# CUDA toolkit (nvcc + headers + `CUDA_HOME`). The default uv image ships only
+# torch's CUDA *runtime* wheels, so use a CUDA *devel* image whose CUDA line
+# matches torch's (here cuda13.0 <-> torch cu130). See `hub_utils.DEFAULT_IMAGE`.
 #
 # `--secrets HF_TOKEN` forwards your local token to the Job so it can push the
 # resulting repo under your namespace. The output repo id is derived from

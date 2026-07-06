@@ -32,6 +32,13 @@ from . import load_source_code
 # See https://huggingface.co/docs/hub/main/en/jobs-configuration#hardware-flavor
 DEFAULT_FLAVOR = 'rtx-pro-6000'
 
+# The default Docker image. AOTInductor compiles a `.so`, so it needs a full
+# CUDA toolkit (nvcc + headers + `CUDA_HOME`) -- a CUDA *devel* image, not the
+# default uv image (which has only torch's CUDA runtime wheels). The image's
+# CUDA line must match torch's (here cuda13.0 <-> torch cu130).
+# Override at launch with `hf jobs uv run job.py --image <image>`.
+DEFAULT_IMAGE = 'pytorch/pytorch:2.9.1-cuda13.0-cudnn9-devel'
+
 
 def create_aoti_repo(
     module: torch.nn.Module,
@@ -139,7 +146,7 @@ def create_aoti_repo(
             aokit_load=aokit_load_readme,
             repo_id=output_repo_id,
             job_id=f'{user}/{job_id}' if job_id is not None else None,
-            job_image=job_info.docker_image if job_info is not None else os.getenv('JOB_IMAGE'),
+            job_image=job_info.docker_image if job_info is not None else os.getenv('JOB_IMAGE', DEFAULT_IMAGE),
             job_flavor=job_info.flavor if job_info is not None else os.getenv('JOB_FLAVOR', DEFAULT_FLAVOR),
             environment=torch.utils.collect_env.pretty_str(env_info),
             library_name=library_name,
@@ -293,6 +300,7 @@ hf download {repo_id} job.py --local-dir .
 # Run the job and change flavor or image if needed
 hf jobs uv run job.py \\
     --flavor {job_flavor or DEFAULT_FLAVOR} \\
+    --image {job_image or DEFAULT_IMAGE} \\
     --secrets HF_TOKEN
 
 # Or run locally with Docker
