@@ -19,6 +19,10 @@ pip install aokit
 
 ## Quickstart
 
+> [!NOTE]
+> Even though our examples and guides use the Diffusers library, `aokit` is NOT
+> library-dependent.
+
 We recommend following the [accompanying blog post](https://huggingface.co/blog/zerogpu-aoti).
 
 Using AOT-compiled models in the context of Diffusers is just a few lines of code. Normally,
@@ -135,6 +139,7 @@ You can find several other guides at [`guides`](./guides/):
 
 * [Dynamic shapes](./guides/dynamic_shapes.md)
 * [Regional compilation](./guides/regional_compilation.md)
+* [Quantization](./guides/quant.md)
 * Compilation flags (coming)
 * Kernels support (coming)
 
