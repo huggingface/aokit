@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#   "aokit @ git+https://github.com/huggingface/aokit.git@hf-jobs",  # needs aokit.hub_utils
+#   "aokit @ https://github.com/huggingface/aokit/archive/refs/heads/hf-jobs.tar.gz",  # aokit.hub_utils (branch tarball; no git CLI needed in the image)
 #   "torch>=2.8.0",
 #   "diffusers>=0.32.0",
 #   "transformers",
