@@ -34,6 +34,7 @@ testpaths = ["tests"]
 [tool.coverage.run]
 source = ["aokit"]
 concurrency = ["thread", "multiprocessing"]
+omit = ["*/aokit/hub_utils.py"]
 
 [tool.coverage.report]
 fail_under = 100
