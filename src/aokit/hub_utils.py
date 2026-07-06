@@ -54,7 +54,7 @@ def create_aoti_repo(
     - compiles the module and saves the packaged binary
     - loads the compiled version (mutates the module)
     - generates output samples again (after compilation)
-    - writes a README + environment/config context files
+    - writes a README + environment context file
     - uploads everything to a freshly created Hub repo
 
     Parameters
@@ -81,7 +81,7 @@ def create_aoti_repo(
     job_id = os.environ.get('JOB_ID')
     job_info = _inspect_job(job_id)
     env_info = torch.utils.collect_env.get_env_info()
-    library_name, config = _get_library_config(module)
+    library_name = _get_library_name(module)
 
     with TemporaryDirectory() as tempdir:
         tempdir = Path(tempdir)
@@ -92,7 +92,6 @@ def create_aoti_repo(
         samples_before_dir = tempdir / 'samples' / 'before'
         samples_after_dir = tempdir / 'samples' / 'after'
         environment_path = tempdir / 'environment.json'
-        config_path = tempdir / 'module_config.json'
 
         # Samples before compile
         samples_before_dir.mkdir(parents=True)
@@ -114,10 +113,8 @@ def create_aoti_repo(
         generate_samples(str(samples_after_dir))
         generate_after_dt = time.perf_counter() - t0
 
-        # Environment and config dump
+        # Environment dump
         environment_path.write_text(json.dumps(env_info._asdict(), indent=4))
-        if config is not None:
-            config_path.write_text(json.dumps(config, indent=4))
 
         # Create repo (namespace defaults to `user`)
         output_repo_id = _create_empty_repo(
@@ -217,20 +214,19 @@ def _get_repo_id(
     return f'{namespace}/{base_name}-sm{sm}-cu{cu}-r{rnd}'
 
 
-def _get_library_config(module: torch.nn.Module):
+def _get_library_name(module: torch.nn.Module) -> str | None:
     if (config := getattr(module, 'config', None)) is None:
-        return None, None
+        return None
     if callable(getattr(config, 'to_dict', None)):
         config = config.to_dict()
     if not isinstance(config, dict):
-        return None, None
+        return None
     if 'transformers_version' in config:
-        library_name = 'transformers'
+        return 'transformers'
     elif '_diffusers_version' in config:
-        library_name = 'diffusers'
+        return 'diffusers'
     else:
-        library_name = 'unknown'
-    return library_name, config
+        return 'unknown'
 
 
 def _readme_template(
