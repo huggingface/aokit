@@ -137,6 +137,7 @@ You can find several other guides at [`guides`](./guides/):
 * [Regional compilation](./guides/regional_compilation.md)
 * Compilation flags (coming)
 * Kernels support (coming)
+* [Using with HF Jobs](./guides/hf-jobs.md)
 
 ## API documentation
 
