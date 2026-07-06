@@ -124,7 +124,8 @@ def create_aoti_repo(
         )
 
         # README.md
-        model_init_region = (inspect.getsource(sys.modules['__main__'])
+        model_init_region = (
+            inspect.getsource(sys.modules['__main__'])
             .split('\n# README::MODEL_INIT::START')[1]
             .split('\n# README::MODEL_INIT::END')[0]
         )
@@ -138,20 +139,22 @@ def create_aoti_repo(
             kind = 'tree' if path.is_dir() else 'resolve'
             return f'{HUB_URL}/{output_repo_id}/{kind}/main/{path.relative_to(tempdir)}'
 
-        readme_path.write_text(_readme_template(
-            model_init=model_init_region,
-            aokit_load=aokit_load_readme,
-            repo_id=output_repo_id,
-            job_id=f'{user}/{job_id}' if job_id is not None else None,
-            job_image=job_info.docker_image if job_info is not None else os.getenv('JOB_IMAGE', DEFAULT_IMAGE),
-            job_flavor=job_info.flavor if job_info is not None else os.getenv('JOB_FLAVOR', DEFAULT_FLAVOR),
-            environment=torch.utils.collect_env.pretty_str(env_info),
-            library_name=library_name,
-            generate_before_dt=generate_before_dt,
-            generate_after_dt=generate_after_dt,
-            samples_before_urls=[get_link(path) for path in samples_before_dir.iterdir()],
-            samples_after_urls=[get_link(path) for path in samples_after_dir.iterdir()],
-        ))
+        readme_path.write_text(
+            _readme_template(
+                model_init=model_init_region,
+                aokit_load=aokit_load_readme,
+                repo_id=output_repo_id,
+                job_id=f'{user}/{job_id}' if job_id is not None else None,
+                job_image=job_info.docker_image if job_info is not None else os.getenv('JOB_IMAGE', DEFAULT_IMAGE),
+                job_flavor=job_info.flavor if job_info is not None else os.getenv('JOB_FLAVOR', DEFAULT_FLAVOR),
+                environment=torch.utils.collect_env.pretty_str(env_info),
+                library_name=library_name,
+                generate_before_dt=generate_before_dt,
+                generate_after_dt=generate_after_dt,
+                samples_before_urls=[get_link(path) for path in samples_before_dir.iterdir()],
+                samples_after_urls=[get_link(path) for path in samples_after_dir.iterdir()],
+            )
+        )
 
         # Self-include the entry-point job script so the repo is a reproducible
         # artifact of this Job. `__file__` here would point at this module, so
@@ -318,10 +321,12 @@ can be used to customize the repo name generation:
 Generated as part of the compilation job: before and after compilation
 | Before compilation ({generate_before_dt:.2f}s) | After compilation ({generate_after_dt:.2f}s) |
 |------------------------------------------------|----------------------------------------------|
-{NEWLINE.join(
-    f"| {media_cell(before_url)} | {media_cell(after_url)} |"
-    for before_url, after_url in zip(samples_before_urls, samples_after_urls)
-)}
+{
+        NEWLINE.join(
+            f"| {media_cell(before_url)} | {media_cell(after_url)} |"
+            for before_url, after_url in zip(samples_before_urls, samples_after_urls)
+        )
+    }
 
 Speedup: **{generate_before_dt / generate_after_dt:.2f}x**
 (note that this might not always reflect actual performance gain)
