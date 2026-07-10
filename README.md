@@ -135,6 +135,8 @@ image.save("generated_image.png")
 
 </details>
 
+## Guides
+
 You can find several other guides at [`guides`](./guides/):
 
 * [Dynamic shapes](./guides/dynamic_shapes.md)
