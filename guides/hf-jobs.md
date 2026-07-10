@@ -63,7 +63,7 @@ users can verify them before the actual deployment.
 # only supplies the model and the two handlers below. It defaults to the
 # `rtx-pro-6000` flavor (see `aokit.hub_utils.DEFAULT_FLAVOR`).
 
-from aokit.hub_utils import create_aoti_repo
+from aokit.hub_utils import create_aokit_repo
 
 
 # =========================
@@ -126,7 +126,7 @@ def generate_samples(samples_dir: str):
 
 
 def main():
-    create_aoti_repo(
+    create_aokit_repo(
         module=pipeline.transformer,
         module_expr='pipeline.transformer',
         compile_and_save=compile_and_save,

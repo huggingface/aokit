@@ -40,7 +40,7 @@ DEFAULT_FLAVOR = 'rtx-pro-6000'
 DEFAULT_IMAGE = 'pytorch/pytorch:2.9.1-cuda13.0-cudnn9-devel'
 
 
-def create_aoti_repo(
+def create_aokit_repo(
     module: torch.nn.Module,
     module_expr: str,
     compile_and_save: Callable[[torch.nn.Module, str], None],
