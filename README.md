@@ -137,9 +137,9 @@ You can find several other guides at [`guides`](./guides/):
 
 * [Dynamic shapes](./guides/dynamic_shapes.md)
 * [Regional compilation](./guides/regional_compilation.md)
+* [Using with HF Jobs](./guides/hf-jobs.md)
 * Compilation flags (coming)
 * Kernels support (coming)
-* [Using with HF Jobs](./guides/hf-jobs.md)
 
 ## API documentation
 
